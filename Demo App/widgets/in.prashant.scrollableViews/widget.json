@@ -1,6 +1,6 @@
 {
 	"id": "in.prashant.scrollableViews",
-	"name": "Animated Pages",
+	"name": "Scrollable Views",
 	"description" : "Alloy widget to create animated scrollable pages",
 	"author": "Prashant Saini",
 	"version": "1.0.0",
