@@ -85,7 +85,7 @@ var pagerPosition = 14 + defaultPadding;        // default left position of anim
 
                 $.SCROLLABLE_VIEW.addEventListener('scrollend', setControl);
             }
-            
+
         } else {
             $.pagerContainer.remove($.pagerControl);        // remove animated pager
         }
@@ -124,14 +124,12 @@ function onScrollAnimate(e) {
         if (delta == 0) { delta = 1; }
         var nextPage = currentPage + 1;
         $.backdropViews.children[nextPage].opacity = delta;
-        Ti.API.info('Next Page = ' + nextPage);
 
     } else if (cFloat < currentPage) {
         // first page index must be 0
         var prevPage = !currentPage ? 0 : currentPage;
         if (delta == 1) {delta = 0;}
         $.backdropViews.children[prevPage].opacity = delta;
-        Ti.API.info('Prev Page = ' + prevPage);
     }
 
     if (cFloat === e.currentPage) {
@@ -146,64 +144,6 @@ function setControl(e) {
     });
 }
 
-function addView(view) {
-   $.SCROLLABLE_VIEW.addView(view);
-   totalPages = $.SCROLLABLE_VIEW.views.length;
 
-   if (pagingEffect) {
-       $.PAGING_VIEW.add(Widget.createController('paging', {
-           border : borderColor,
-           backfill : (totalPages == 1) ? pagingSelectedColor : 'transparent',
-           padding : (totalPages == 1) ? 0 : defaultPadding
-       }).getView());
-   }
-
-   $.SCROLLABLE_VIEW.scrollToView((totalPages - 1));
-}
-
-function removeView(_view) {
-   if (totalPages === 0) {
-      Ti.API.warn('No view to remove');
-      return;
-   }
-
-   if (_view.apiName !== 'Ti.UI.View') {
-      Ti.API.warn('Cannot remove view. Invalid index type passed');
-      return;
-   }
-
-   Ti.API.info('Removing = ' + _view);
-
-   $.SCROLLABLE_VIEW.removeView(_view);
-   totalPages = $.SCROLLABLE_VIEW.views.length;
-
-   if (totalPages === 1) {
-      $.SCROLLABLE_VIEW.currentPage = 0;
-   }
-
-   if (pagingEffect) {
-       if (totalPages == 0) {
-           $.PAGING_VIEW.removeAllChildren();
-
-       } else {
-           var pageIndex = totalPages - 1;
-           $.PAGING_VIEW.remove($.PAGING_VIEW.children[pageIndex]);
-           Ti.API.info('Pagin = ' + pageIndex);
-           setControl();
-       }
-   }
-}
-
-
-// expose pager
+// expose scrollable view pager
 $.scrollableView = $.SCROLLABLE_VIEW;
-$.add = addView;
-$.remove = removeView;
-
-$.currentPage = function () {
-   return $.SCROLLABLE_VIEW.currentPage;
-};
-
-$.totalPages = function () {
-   return totalPages;
-};
