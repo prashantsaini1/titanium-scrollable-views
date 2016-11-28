@@ -11,7 +11,7 @@
 	top: 50,
 	bottom: 50,
 	pagingEffect : true,
-	opacityEffect : true,
+	backdropEffect : true,
 	pagingSelectedColor : 'white',
 	pagingBorderColor : 'white',
 	backdropColors : ['teal', 'silver', 'cyan', 'pink']

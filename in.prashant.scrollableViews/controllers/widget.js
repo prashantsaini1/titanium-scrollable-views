@@ -4,7 +4,7 @@ var lastPage        = 0,
     currentPage     = 0,
     pagingEffect    = (args.pagingEffect === undefined) || (args.pagingEffect == true),
     pagingStyle     = ((args.pagingStyle === undefined) || (args.pagingStyle == 0)) ? 0 : 1,    // 0 for animated pager, 1 for default static pager
-    opacityEffect   = ((args.opacityEffect === undefined) || (args.opacityEffect == false)) ? false : true,
+    opacityEffect   = ((args.backdropEffect === undefined) || (args.backdropEffect == false)) ? false : true,
     defaultPadding  = parseInt(args.pagingPadding) || 7;
 
 var pagingSelectedColor = args.pagingSelectedColor || 'white';
@@ -13,26 +13,23 @@ var borderColor = args.pagingBorderColor || 'white';
 var pagerPosition = 14 + defaultPadding;        // default left position of animated pager control
 
 (function constructor() {
-   var views = null;
+    var views = null;
+    if ( (args.views !== undefined) && _.isArray(args.views) ) {
+        views = _.filter(args.views, function (view) { return view.apiName == 'Ti.UI.View'; });
 
-   if ( (args.views !== undefined) && _.isArray(args.views) ) {
-      views = _.filter(args.views, function (view) {
-         return view.apiName == 'Ti.UI.View';
-      });
-      totalPages = views.length;
+    } else if (args.children !== undefined) {
+        views = _.filter(args.children, function (view) { return view.apiName == 'Ti.UI.View'; });
+    }
 
-   } else if (args.children !== undefined) {
-      views = args.children;
-      totalPages = views.length;
-   }
-
+    totalPages = views.length;
 
     if (OS_IOS && (args.clip !== undefined) && (args.clip != false)) {
         $.SCROLLABLE_VIEW.left = $.SCROLLABLE_VIEW.right = args.clipPadding;
         $.SCROLLABLE_VIEW.clipViews = false;
     }
 
-    $.PAGING_VIEW.visible = (args.pagingVisible === undefined) ? true : args.pagingVisible;
+    $.PAGING_VIEW.visible  = (args.pagingVisible === undefined) ? true : args.pagingVisible;
+    $.pagerControl.visible = (args.pagingVisible === undefined) ? true : args.pagingVisible;
 
     // set properties on main container
     var props = _.pick(args, 'width', 'height', 'top', 'bottom', 'left', 'right', 'backgroundColor');
@@ -144,6 +141,54 @@ function setControl(e) {
     });
 }
 
+function addView(view) {
+   $.SCROLLABLE_VIEW.addView(view);
+   totalPages = $.SCROLLABLE_VIEW.views.length;
+
+   if (pagingEffect) {
+       $.PAGING_VIEW.add(Widget.createController('paging', {
+           border : borderColor,
+           background_color : pagingStyle == 1 || totalPages == 1) ? pagingSelectedColor : 'transparent',
+           padding : (totalPages == 1) ? 0 : defaultPadding
+       }).getView());
+   }
+
+   $.SCROLLABLE_VIEW.currentPage = totalPages - 1;
+}
+
+function removeView(_view) {
+   if (totalPages === 0) {
+      Ti.API.warn('No view to remove');
+      return;
+   }
+
+   if (_view.apiName !== 'Ti.UI.View') {
+      Ti.API.warn('Cannot remove view. Invalid view type passed');
+      return;
+   }
+
+   $.SCROLLABLE_VIEW.removeView(_view);
+   totalPages = $.SCROLLABLE_VIEW.views.length;
+
+   if (totalPages === 1) {
+      $.SCROLLABLE_VIEW.currentPage = 0;
+   }
+
+   if (pagingEffect) {
+       if (totalPages == 0) {
+           $.PAGING_VIEW.removeAllChildren();
+
+       } else {
+           var pageIndex = totalPages - 1;
+           $.PAGING_VIEW.remove($.PAGING_VIEW.children[pageIndex]);
+           Ti.API.info('Pagin = ' + pageIndex);
+           setControl();
+       }
+   }
+}
+
 
 // expose scrollable view pager
 $.scrollableView = $.SCROLLABLE_VIEW;
+$.add = addView;
+$.remove = removeView;
