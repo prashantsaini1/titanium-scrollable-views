@@ -1,0 +1,12 @@
+
+"#paging": {
+    width: Ti.UI.SIZE,
+    height: Ti.UI.SIZE,
+}
+
+".pagingProps" : {
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+    touchEnabled: false
+}
