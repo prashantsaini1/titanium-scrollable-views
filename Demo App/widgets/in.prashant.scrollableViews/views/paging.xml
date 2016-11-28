@@ -1,0 +1,6 @@
+<Alloy>
+    <View id="paging">
+        <View id="mainControl" class="pagingProps" borderWidth="1"></View>
+        <View id="coverControl" class="pagingProps" borderWidth="1.5"></View>
+    </View>
+</Alloy>

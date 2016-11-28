@@ -1,0 +1,18 @@
+<Alloy>
+    <View id="container">
+        <View id="backdropViews">
+            <!-- Add views here to animate -->
+        </View>
+
+        <ScrollableView id="SCROLLABLE_VIEW" />
+
+        <ScrollView id="scrollView">
+            <View id="pagerContainer">
+                <View id="PAGING_VIEW">
+                    <!-- <View class="radio-views left-padding"></View> -->
+                </View>
+                <View id="pagerControl"></View>
+            </View>
+        </ScrollView>
+    </View>
+</Alloy>

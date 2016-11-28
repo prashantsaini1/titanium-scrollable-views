@@ -1,0 +1,21 @@
+<Alloy>
+	<Window backgroundColor="white">
+		<Widget id="scrollWidget" src="in.prashant.scrollableViews">
+			<View>
+				<Button color="white">All Good</Button>
+			</View>
+
+			<View>
+				<Button>All Good</Button>
+			</View>
+
+			<View>
+				<Button>All Good</Button>
+			</View>
+
+			<View>
+				<Button>All Good</Button>
+			</View>
+		</Widget>
+	</Window>
+</Alloy>

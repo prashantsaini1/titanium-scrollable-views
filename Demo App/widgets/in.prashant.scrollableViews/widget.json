@@ -1,0 +1,13 @@
+{
+	"id": "in.prashant.scrollableViews",
+	"name": "Animated Pages",
+	"description" : "Alloy widget to create animated scrollable pages",
+	"author": "Prashant Saini",
+	"version": "1.0.0",
+	"copyright":"",
+	"license":"",
+	"min-alloy-version": "1.0",
+	"min-titanium-version":"5.3.1",
+	"tags":"",
+	"platforms":"ios, android"
+}
