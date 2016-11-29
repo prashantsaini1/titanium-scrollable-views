@@ -5,12 +5,9 @@ var lastPage        = 0,
     pagingEffect    = (args.pagingEffect === undefined) || (args.pagingEffect == true),
     pagingStyle     = ((args.pagingStyle === undefined) || (args.pagingStyle == 0)) ? 0 : 1,    // 0 for animated pager, 1 for default static pager
     opacityEffect   = ((args.backdropEffect === undefined) || (args.backdropEffect == false)) ? false : true,
-    defaultPadding  = parseInt(args.pagingPadding) || 7;
-
-var pagingSelectedColor = args.pagingSelectedColor || 'white';
-var borderColor = args.pagingBorderColor || 'white';
-
-var pagerPosition = 14 + defaultPadding;        // default left position of animated pager control
+    defaultPadding  = parseInt(args.pagingPadding) || 7,
+    pagingColor     = args.pagingColor || 'white',
+    pagerPosition   = 14 + defaultPadding;        // default left position of animated pager control
 
 (function constructor() {
     var views = null;
@@ -57,13 +54,13 @@ var pagerPosition = 14 + defaultPadding;        // default left position of anim
                 for (var i = 0; i < totalPages; ++i) {
                     $.PAGING_VIEW.add(Widget.createController('paging', {
                         index : i,
-                        border : borderColor,
+                        border : pagingColor,
                         background_color : 'transparent',       // for animated pager, pass backgroundColor as transparent
                         padding : (i == 0) ? 0 : defaultPadding
                     }).getView());
                 }
 
-                $.pagerControl.borderColor = pagingSelectedColor;
+                $.pagerControl.borderColor = pagingColor;
                 $.pagerControl.left = currentPage * pagerPosition;
 
                 $.SCROLLABLE_VIEW.addEventListener('scroll', animateControl);
@@ -74,8 +71,8 @@ var pagerPosition = 14 + defaultPadding;        // default left position of anim
                 for (var i = 0; i < totalPages; ++i) {
                     $.PAGING_VIEW.add(Widget.createController('paging', {
                         index : i,
-                        border : borderColor,
-                        background_color : (i == currentPage) ? pagingSelectedColor : 'transparent',
+                        border : pagingColor,
+                        background_color : (i == currentPage) ? pagingColor : 'transparent',
                         padding : (i == 0) ? 0 : defaultPadding
                     }).getView());
                 }
@@ -117,6 +114,8 @@ function onScrollAnimate(e) {
 
     var delta = cFloat - Math.floor(cFloat);
 
+    // Ti.API.info('Delta = ' + delta + ' : Float = ' + cFloat + ' : Page = ' + e.currentPage);
+
     if (cFloat > currentPage) {
         if (delta == 0) { delta = 1; }
         var nextPage = currentPage + 1;
@@ -137,7 +136,7 @@ function onScrollAnimate(e) {
 
 function setControl(e) {
     _.each($.PAGING_VIEW.children, function(child, index) {
-        child.setPagingSelectedColor(($.SCROLLABLE_VIEW.currentPage === index) ? pagingSelectedColor : 'transparent');
+        child.setPagingSelectedColor(($.SCROLLABLE_VIEW.currentPage === index) ? pagingColor : 'transparent');
     });
 }
 
@@ -147,8 +146,8 @@ function addView(view) {
 
    if (pagingEffect) {
        $.PAGING_VIEW.add(Widget.createController('paging', {
-           border : borderColor,
-           background_color : pagingStyle == 1 || totalPages == 1) ? pagingSelectedColor : 'transparent',
+           border : pagingColor,
+           background_color : (pagingStyle == 1 || totalPages == 1) ? pagingColor : 'transparent',
            padding : (totalPages == 1) ? 0 : defaultPadding
        }).getView());
    }
@@ -181,7 +180,6 @@ function removeView(_view) {
        } else {
            var pageIndex = totalPages - 1;
            $.PAGING_VIEW.remove($.PAGING_VIEW.children[pageIndex]);
-           Ti.API.info('Pagin = ' + pageIndex);
            setControl();
        }
    }
