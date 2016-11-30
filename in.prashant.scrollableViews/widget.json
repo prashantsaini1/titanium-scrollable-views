@@ -1,7 +1,7 @@
 {
 	"id": "in.prashant.scrollableViews",
 	"name": "Scrollable Views",
-	"description" : "Alloy widget to create animated scrollable pages",
+	"description" : "Alloy widget to create animated scrollable pages with background transition effect and a moveable pager control",
 	"author": "Prashant Saini",
 	"version": "1.0.0",
 	"copyright":"",
