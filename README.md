@@ -25,7 +25,8 @@ var widget = Alloy.createWidget('in.prashant.scrollableViews', {
 	pagingColor : 'white',
 	pagingEffect : true,
 	backdropEffect : true,
-	backdropColors : ['teal', 'silver', 'cyan', 'pink']
+	backdropColors : ['teal', 'silver', 'cyan', 'pink'],
+	views : [Ti.UI.createView(), Ti.UI.createView(), Ti.UI.createView(), Ti.UI.createView()]
 });
 ```
 
@@ -61,7 +62,7 @@ var widget = Alloy.createWidget('in.prashant.scrollableViews', {
 ```
 
 ###Properties###
-* **backdropEffect**  : set the background transition effect (true/false) - defaults to false
+* **backdropEffect**  : set the background transition effect (true/false) - defaults to false - *do not set background colors of **Ti.UI.View** to take effect of **backdropEffect** property*
 * **backdropColors**  : array of colors to use with backdropEffect - defaults to transparent
 * **pagingEffect**    : shows the paging control (true/false) - defaults to true
 * **pagingPosition**  : position of paging control - pass string "top" or "bottom"
