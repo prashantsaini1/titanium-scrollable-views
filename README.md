@@ -78,7 +78,7 @@ var widget = Alloy.createWidget('in.prashant.scrollableViews', {
   * *argument 1* : pass single view (Ti.UI.View) or an array of views to add.
   * *argument 2* :  color or an array of colors for **backdropEffect**. _(optional)_
   * *argument 3* : boolean to scroll to last view/page added. _(optional)_
-* **remove**: Remove view by passing either View or index of the view - *iOS + Android* ( :stuck_out_tongue_winking_eye: but Ti SDK only allows to remove the view by index on iOS)
+* **remove**: Remove view by passing either View or index of the view - *iOS + Android* ( :stuck_out_tongue_winking_eye: but Ti SDK allows to remove the view by index on iOS only)
   * *argument 1* : Ti.UI.View object or index of the view to remove.
   
 
