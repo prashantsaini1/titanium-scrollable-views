@@ -2,20 +2,23 @@
 	<Window backgroundColor="white">
 		<Widget id="scrollWidget" src="in.prashant.scrollableViews">
 			<View>
-				<Button color="white">All Good</Button>
+				<Button>All Good 0</Button>
 			</View>
 
 			<View>
-				<Button>All Good</Button>
+				<Button>All Good 1</Button>
 			</View>
 
 			<View>
-				<Button>All Good</Button>
+				<Button>All Good 2</Button>
 			</View>
 
 			<View>
-				<Button>All Good</Button>
+				<Button>All Good 3</Button>
 			</View>
 		</Widget>
+		
+		<Button bottom="10" left='20' color="blue" onClick="add">ADD PAGE</Button>
+		<Button bottom="10" right="20" color="red" onClick="remove">REMOVE PAGE</Button>
 	</Window>
 </Alloy>

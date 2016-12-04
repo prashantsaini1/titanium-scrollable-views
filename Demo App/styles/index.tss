@@ -1,18 +1,15 @@
-
-
-"Label": {
-	width: Ti.UI.SIZE,
-	height: Ti.UI.SIZE,
-	color: "#000"
-}
-
 "#scrollWidget": {
+	// height : Ti.UI.FILL,
 	width: Ti.UI.FILL,
 	top: 50,
 	bottom: 50,
+	pagingPosition : 'top',
+	pagingColor : 'white',
 	pagingEffect : true,
 	backdropEffect : true,
-	pagingSelectedColor : 'white',
-	pagingBorderColor : 'white',
 	backdropColors : ['teal', 'silver', 'cyan', 'pink']
+}
+
+"Button" : {
+	color : 'white'
 }

@@ -7,13 +7,13 @@
 }
 
 "#SCROLLABLE_VIEW" : {
-	disableBounce : true
+	disableBounce : true,
+	showPagingControl : false
 }
 
 "#scrollView": {
    left: 15,
    right: 15,
-   bottom: 8,
    height: Ti.UI.SIZE,
    scrollType: 'horizontal',
    disableBounce: true
@@ -34,5 +34,5 @@
 
 "#pagerContainer": {
     width: Ti.UI.SIZE,
-    height: Ti.UI.SIZE,
+    height: Ti.UI.SIZE
 }
