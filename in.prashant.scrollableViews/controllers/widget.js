@@ -108,16 +108,16 @@ function animateControl(e) {
 
 function onScrollAnimate(e) {
     if (isRemoving) { return; }
-    
+
     var cFloat = e.currentPageAsFloat;
 
     if ((totalPages <= 1) || (cFloat < 0) || (cFloat > $.SCROLLABLE_VIEW.views.length - 1)) {
         return;
-    } 
+    }
 
     var delta = cFloat - Math.floor(cFloat);
 
-    // Ti.API.info('Delta = ' + delta + ' : Float = ' + cFloat + ' : Page = ' + e.currentPage);
+    Ti.API.info('Delta = ' + delta + ' : Float = ' + cFloat + ' : Page = ' + e.currentPage);
 
     if (cFloat > currentPage) {
         // on iOS, scrolling can be jumped slightly to next page when swiped very fastly
@@ -160,7 +160,7 @@ function addView(_views, _backdropColors, _scrollToView) {
     _.each(_views, function(_view, i) {
         if (_view.apiName == 'Ti.UI.View') {
             $.SCROLLABLE_VIEW.addView(_view);
-            
+
             ++totalPages;
 
             if (pagingEffect) {
@@ -202,78 +202,75 @@ function removeView(_viewOrIndex) {
         Ti.API.warn('No view to remove');
         return;
     }
-    
+
     var tempViewIndex = null;
-    
+
     if (typeof _viewOrIndex === 'object') {
         if (_viewOrIndex.apiName !== 'Ti.UI.View') {
             Ti.API.warn('Cannot remove view. Invalid view type passed');
             return;
-            
+
         } else {
-            // find the index of the view to be removed 
+            // find the index of the view to be removed
             _.each($.SCROLLABLE_VIEW.views, function (_tempView, i) {
                 (_tempView === _viewOrIndex) && (tempViewIndex = i);
             });
         }
-        
+
     } else if (typeof _viewOrIndex === 'number' && (_viewOrIndex !== NaN)) {
-        if ( (_viewOrIndex >= 0) && (_viewOrIndex < totalPages) ) {
-            tempViewIndex = _viewOrIndex;
-              
-        } else {
-            Ti.API.warn('Cannot remove view. Invalid index type passed');
-            return;
-        }
-        
+        tempViewIndex = _viewOrIndex;
+
     } else {
         Ti.API.warn('Cannot remove view. Pass either View or index');
         return;
     }
-    
+
     if ( (tempViewIndex < 0) || tempViewIndex > (totalPages - 1) ) {
         Ti.API.warn('Index/View is not valid');
         return;
     }
-    
+
+
     try {
         isRemoving = true;
-        
+
         $.SCROLLABLE_VIEW.removeView($.SCROLLABLE_VIEW.views[tempViewIndex]);
-        
-        // if we do not set timeout on this code, then onScrollAnimate will call immediately before currentPage value gets changes
-        setTimeout(function () {
-            --totalPages;
-            currentPage = $.SCROLLABLE_VIEW.currentPage;
-             
-            // remove backdrop view and set opacity to 1 of all views till currentPage
-            if (opacityEffect) {
-                $.backdropViews.remove($.backdropViews.children[tempViewIndex]);
-                var childs = $.backdropViews.children;
-                for (var i=0; i<=currentPage; i++) { childs[i].opacity = 1; }
-                childs = null;
+
+        if ( (tempViewIndex < currentPage) || ((tempViewIndex == currentPage) && (tempViewIndex == (totalPages - 1))) ) {
+            --currentPage;
+            $.SCROLLABLE_VIEW.currentPage = currentPage;
+        }
+
+        --totalPages;
+
+        // remove backdrop view and set opacity to 1 of all views till currentPage
+        if (opacityEffect) {
+            $.backdropViews.remove($.backdropViews.children[tempViewIndex]);
+            var childs = $.backdropViews.children;
+            for (var i=0; i<=currentPage; i++) { childs[i].opacity = 1; }
+            childs = null;
+        }
+
+        // remove last pager, set left position of animated pager and if no views are then set it visible false
+        if (pagingEffect) {
+            if (totalPages == 0) {
+                $.PAGING_VIEW.removeAllChildren();
+                $.pagerControl.visible = false;
+
+            } else {
+                $.PAGING_VIEW.remove($.PAGING_VIEW.children[totalPages - 1]);
+                if (currentPage == 0) { $.PAGING_VIEW.children[0].left = 0; }
+                $.pagerControl.left = currentPage * pagerPosition;
             }
-             
-            // remove last pager, set left position of animated pager and if no views are then set it visible false
-            if (pagingEffect) {
-                if (totalPages == 0) {
-                    $.PAGING_VIEW.removeAllChildren();
-                    $.pagerControl.visible = false;
-                        
-                } else {
-                    $.PAGING_VIEW.remove($.PAGING_VIEW.children[totalPages - 1]);
-                    if (currentPage == 0) { $.PAGING_VIEW.children[0].left = 0; }
-                    $.pagerControl.left = currentPage * pagerPosition;
-                }
-            }
-             
-            isRemoving = false;
-        }, 300);
-        
+        }
+
+        isRemoving = false;
+
     } catch(ex) {
         isRemoving = false;
     }
 }
+
 
 // expose scrollable view pager
 $.scrollableView = $.SCROLLABLE_VIEW;
