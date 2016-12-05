@@ -61,7 +61,7 @@ var widget = Alloy.createWidget('in.prashant.scrollableViews', {
 }
 ```
 
-###Properties###
+###Arguments###
 * **backdropEffect**  : set the background transition effect (true/false) - defaults to false - do not set background colors of Ti.UI.View to take effect of __backdropEffect__ property
 * **backdropColors**  : array of colors to use with backdropEffect - defaults to transparent
 * **pagingEffect**    : shows the paging control (true/false) - defaults to true
@@ -80,6 +80,9 @@ var widget = Alloy.createWidget('in.prashant.scrollableViews', {
   * *argument 3* : boolean to scroll to last view/page added. _(optional)_
 * **remove**: Remove view by passing either View or index of the view - *iOS + Android* ( :stuck_out_tongue_winking_eye: but Ti SDK allows to remove the view by index on iOS only)
   * *argument 1* : Ti.UI.View object or index of the view to remove.
+
+###Exposer Properties###
+* **scrollableView**: instance of the Ti.UI.ScrollableView used in this widget.
   
 
 ###THANKS###
