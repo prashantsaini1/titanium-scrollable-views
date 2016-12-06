@@ -94,12 +94,18 @@ var lastPage = 0,
                 }));
             }
             $.SCROLLABLE_VIEW.addEventListener('scroll', onScrollAnimate);
+
+        } else {
+            $.SCROLLABLE_VIEW.addEventListener('scrollend', function (e) {
+                currentPage = e.currentPage;
+                Ti.API.info('Current Page = ' + currentPage);
+            });
         }
     }
 })();
 
 function animateControl(e) {
-    if ((totalPages <= 1) || (e.currentPageAsFloat < 0) || (e.currentPageAsFloat > $.SCROLLABLE_VIEW.views.length - 1)) {
+    if ((totalPages <= 1) || (e.currentPageAsFloat < 0) || (e.currentPageAsFloat > (totalPages - 1))) {
         return;
     }
 
@@ -117,7 +123,7 @@ function onScrollAnimate(e) {
 
     var delta = cFloat - Math.floor(cFloat);
 
-    Ti.API.info('Delta = ' + delta + ' : Float = ' + cFloat + ' : Page = ' + e.currentPage);
+    // Ti.API.info('Delta = ' + delta + ' : Float = ' + cFloat + ' : Page = ' + e.currentPage);
 
     if (cFloat > currentPage) {
         // on iOS, scrolling can be jumped slightly to next page when swiped very fastly
@@ -149,6 +155,7 @@ function onScrollAnimate(e) {
     if (cFloat === e.currentPage) {
         // when the scrolling is finished
         currentPage = e.currentPage;
+        Ti.API.info('Current Page = ' + currentPage);
     }
 }
 
@@ -276,6 +283,8 @@ function removeView(_viewOrIndex) {
 $.scrollableView = $.SCROLLABLE_VIEW;
 $.add = addView;
 $.remove = removeView;
+$.currentPage = function () { return currentPage; };
+$.totalPages = function () { return totalPages; };
 
 // iOS swiping fast issue
 /*
