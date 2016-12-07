@@ -9,7 +9,7 @@
         <ScrollView id="scrollView">
             <View id="pagerContainer">
                 <View id="PAGING_VIEW"> </View>
-                
+
                 <View id="pagerControl"></View>
             </View>
         </ScrollView>

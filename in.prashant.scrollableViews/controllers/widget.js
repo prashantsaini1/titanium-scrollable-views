@@ -5,7 +5,7 @@ var lastPage = 0,
     isRemoving = false,     // to stop calling `onScrollAnimate` while removing the view
     pagerPadding = 8,
     opacityEffect = ((args.backdropEffect === undefined) || (args.backdropEffect == false)) ? false : true,
-    pagingEffect = (args.pagingEffect === undefined) || (args.pagingEffect == true),
+    pagingEffect = ((args.pagingEffect === undefined) || (args.pagingEffect == true)) ? true : false,
     pagingTopBottom = (args.pagingPosition === undefined) || (args.pagingPosition === "bottom") ? 'bottom' : 'top',
     pagingColor = args.pagingColor || 'white',
     defaultPadding = parseInt(args.pagingPadding) || 7,
@@ -13,7 +13,7 @@ var lastPage = 0,
 
 
 (function constructor() {
-    var views = null;
+    var views = [];
 
     // get children if Alloy is used, or use `views` key to get pages views
     if ((args.views !== undefined) && _.isArray(args.views)) {
@@ -43,7 +43,8 @@ var lastPage = 0,
     }
 
     // set pager controls visible or invisible
-    $.scrollView.visible = (args.pagingVisible === undefined) ? true : args.pagingVisible;
+    $.scrollView.visible = pagingEffect;
+    $.pagerControl.borderColor = pagingColor;
 
     // set properties on main container
     var props = _.pick(args, 'width', 'height', 'top', 'bottom', 'left', 'right', 'backgroundColor', 'opacity');
@@ -75,14 +76,9 @@ var lastPage = 0,
                 }).getView());
             }
 
-            $.pagerControl.borderColor = pagingColor;
             $.pagerControl.left = currentPage * pagerPosition;
 
             $.SCROLLABLE_VIEW.addEventListener('scroll', animateControl);
-
-        } else {
-            $.container.remove($.scrollView);
-            // remove pager
         }
 
         // create backdrop views
@@ -171,6 +167,8 @@ function addView(_views, _backdropColors, _scrollToView) {
             ++totalPages;
 
             if (pagingEffect) {
+                $.scrollView.visible = true;
+
                 $.PAGING_VIEW.add(Widget.createController('paging', {
                     border : pagingColor,
                     padding : (totalPages == 1) ? 0 : defaultPadding
@@ -192,15 +190,10 @@ function addView(_views, _backdropColors, _scrollToView) {
         $.SCROLLABLE_VIEW.currentPage = currentPage;
 
         // set opacity to 1 of all backdrop views, reverse views to set opacity of topmost view first to avoid blinking
-        opacityEffect && _.each($.backdropViews.children.reverse(), function(_backView) {
-            _backView.opacity = 1;
-        });
+        opacityEffect && _.each($.backdropViews.children.reverse(), function(_backView) { _backView.opacity = 1; });
 
         // set pager control to last page
-        if (pagingEffect) {
-            $.pagerControl.left = currentPage * pagerPosition;
-            $.pagerControl.visible = true;
-        }
+        if (pagingEffect) { $.pagerControl.left = currentPage * pagerPosition; }
     }
 }
 
@@ -262,7 +255,7 @@ function removeView(_viewOrIndex) {
         if (pagingEffect) {
             if (totalPages == 0) {
                 $.PAGING_VIEW.removeAllChildren();
-                $.pagerControl.visible = false;
+                $.scrollView.visible = false;
 
             } else {
                 $.PAGING_VIEW.remove($.PAGING_VIEW.children[totalPages - 1]);
