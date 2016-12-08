@@ -47,7 +47,7 @@ var lastPage = 0,
     $.pagerControl.borderColor = pagingColor;
 
     // set properties on main container
-    var props = _.pick(args, 'width', 'height', 'top', 'bottom', 'left', 'right', 'backgroundColor', 'opacity');
+    var props = _.pick(args, 'width', 'height', 'top', 'bottom', 'left', 'right', 'backgroundColor', 'opacity', 'cacheSize');
     $.container.applyProperties(props);
 
     if (totalPages > 0) {
@@ -65,39 +65,40 @@ var lastPage = 0,
         }
 
         $.SCROLLABLE_VIEW.currentPage = currentPage;
-
-        // create paging controls or remove pager from its parent container
-        if (pagingEffect) {
-            for (var i = 0; i < totalPages; ++i) {
-                $.PAGING_VIEW.add(Widget.createController('paging', {
-                    index : i,
-                    border : pagingColor,
-                    padding : (i == 0) ? 0 : defaultPadding
-                }).getView());
-            }
-
-            $.pagerControl.left = currentPage * pagerPosition;
-
-            $.SCROLLABLE_VIEW.addEventListener('scroll', animateControl);
-        }
-
-        // create backdrop views
-        if (opacityEffect) {
-            for (var i = 0; i < totalPages; ++i) {
-                $.backdropViews.add(Ti.UI.createView({
-                    backgroundColor : (args.backdropColors == undefined) ? 'transparent' : args.backdropColors[i],
-                    opacity : (i <= currentPage) ? 1 : 0
-                }));
-            }
-            $.SCROLLABLE_VIEW.addEventListener('scroll', onScrollAnimate);
-
-        } else {
-            $.SCROLLABLE_VIEW.addEventListener('scrollend', function (e) {
-                currentPage = e.currentPage;
-                Ti.API.info('Current Page = ' + currentPage);
-            });
-        }
     }
+
+    // create paging controls or remove pager from its parent container
+    if (pagingEffect) {
+        Ti.API.info('adding scrolling pager...');
+
+        for (var i = 0; i < totalPages; ++i) {
+            $.PAGING_VIEW.add(Widget.createController('paging', {
+                index : i,
+                border : pagingColor,
+                padding : (i == 0) ? 0 : defaultPadding
+            }).getView());
+        }
+
+        $.pagerControl.left = currentPage * pagerPosition;
+
+        $.SCROLLABLE_VIEW.addEventListener('scroll', animateControl);
+
+    }
+
+    // create backdrop views
+    if (opacityEffect) {
+        for (var i = 0; i < totalPages; ++i) {
+            $.backdropViews.add(Ti.UI.createView({
+                backgroundColor : (args.backdropColors == undefined) ? 'transparent' : args.backdropColors[i],
+                opacity : (i <= currentPage) ? 1 : 0
+            }));
+        }
+        $.SCROLLABLE_VIEW.addEventListener('scroll', onScrollAnimate);
+
+    } else {
+        $.SCROLLABLE_VIEW.addEventListener('scrollend', function (e) { currentPage = e.currentPage; });
+    }
+
 })();
 
 function animateControl(e) {
@@ -158,9 +159,15 @@ function onScrollAnimate(e) {
 function addView(_views, _backdropColors, _scrollToView) {
     // make an array of views and backdropcolors
     _views = _.isArray(_views) ? _views : [_views];
-    _backdropColors = _.isArray(_backdropColors) ? _backdropColors : [_backdropColors];
+
+    if (_backdropColors !== undefined) {
+        _backdropColors = _.isArray(_backdropColors) ? _backdropColors : [_backdropColors];
+    }
+
+    Ti.API.info('Views = ' + _views.length);
 
     _.each(_views, function(_view, i) {
+        Ti.API.info('API name = ' + _view.apiName);
         if (_view.apiName == 'Ti.UI.View') {
             $.SCROLLABLE_VIEW.addView(_view);
 
@@ -175,7 +182,7 @@ function addView(_views, _backdropColors, _scrollToView) {
                 }).getView());
             }
 
-            if (opacityEffect && (_backdropColors !== undefined)) {
+            if (opacityEffect) {
                 $.backdropViews.add(Ti.UI.createView({
                     backgroundColor : _backdropColors[i] || 'transparent',
                     opacity : 0
@@ -271,6 +278,21 @@ function removeView(_viewOrIndex) {
     }
 }
 
+function setPage(_index) {
+    currentPage = _index;
+    $.SCROLLABLE_VIEW.currentPage = currentPage;
+
+    if (pagingEffect) {
+        $.pagerControl.left = currentPage * pagerPosition;
+    }
+
+    if (opacityEffect) {
+        _.each($.backdropViews.children, function (child, i) {
+            childs[i].opacity = (i <= currentPage) ? 1 : 0;
+        });
+    }
+}
+
 
 // expose scrollable view pager
 $.scrollableView = $.SCROLLABLE_VIEW;
@@ -278,6 +300,10 @@ $.add = addView;
 $.remove = removeView;
 $.currentPage = function () { return currentPage; };
 $.totalPages = function () { return totalPages; };
+$.setCurrentPage = setPage;
+
+
+
 
 // iOS swiping fast issue
 /*
