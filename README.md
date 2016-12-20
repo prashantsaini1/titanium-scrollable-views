@@ -65,10 +65,11 @@ var widget = Alloy.createWidget('in.prashant.scrollableViews', {
 * **backdropEffect**  : set the background transition effect (true/false) - defaults to false - do not set background colors of Ti.UI.View to take effect of __backdropEffect__ property
 * **backdropColors**  : array of colors to use with backdropEffect - defaults to transparent
 * **pagingEffect**    : shows the paging control (true/false) - defaults to true
+* **pagerStyle**      : pager style - pass 1 for ring type pagers or pass 2 for solid colored pagers, if value is 2 then optionally pass **pagingBackColor** for unselected pagers
 * **pagingPosition**  : position of paging control - pass string "top" or "bottom"
 * **pagingPadding**   : padding between pagers in paging control - defaults to 7dp
 * **pagingColor**     : color of paging control - defaults to white
-* **pagingVisible**   : sets the visibility of the paging control - (true/false) - defaults to true
+* **pagingBackColor** : sets the color of unselected pagers if pagerStyle is 2, otherwise not effective
 * **clip**            : iOS only - clip views to show them adjacently - defaults to false
 * **clipPadding**     : padding of views when clip is true
 * **index**           : index of the current page to set in widget
