@@ -1,9 +1,21 @@
+"#pagerContainer": {
+    width: Ti.UI.SIZE,
+    height: Ti.UI.SIZE,
+}
 
 "#PAGING_VIEW": {
    width: Ti.UI.SIZE,
    layout: "horizontal",
    height: Ti.UI.SIZE,
    horizontalWrap: false
+}
+
+"#pagerControl": {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    borderWidth: 7,
+    touchEnabled: false
 }
 
 "#SCROLLABLE_VIEW" : {
@@ -22,17 +34,4 @@
 "#backdropViews" : {
 	width : Titanium.UI.FILL,
 	height : Titanium.UI.FILL
-}
-
-"#pagerControl": {
-    width: 15,
-    height: 15,
-    borderRadius: 7.5,
-    borderWidth: 8,
-    touchEnabled: false
-}
-
-"#pagerContainer": {
-    width: Ti.UI.SIZE,
-    height: Ti.UI.SIZE
 }

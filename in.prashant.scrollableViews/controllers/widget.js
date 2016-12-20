@@ -1,18 +1,21 @@
-var args = $.args;
-var lastPage = 0,
-    totalPages = 0,
-    currentPage = 0,
-    isRemoving = false,     // to stop calling `onScrollAnimate` while removing the view
-    pagerPadding = 8,
-    opacityEffect = ((args.backdropEffect === undefined) || (args.backdropEffect == false)) ? false : true,
-    pagingEffect = ((args.pagingEffect === undefined) || (args.pagingEffect == true)) ? true : false,
+var args            = $.args;
+var lastPage        = 0,
+    totalPages      = 0,
+    currentPage     = 0,
+    isRemoving      = false,     // to stop calling `onScrollAnimate` while removing the view
+    pagerPadding    = 5,
+    pagerStyle      = ((args.pagerStyle === undefined) || (args.pagerStyle == 1)) ? 1 : 2,      // 1 for ring type pagers, 2 for solid pagers
+    opacityEffect   = ((args.backdropEffect === undefined) || (args.backdropEffect == false)) ? false : true,
+    pagingEffect    = ((args.pagingEffect === undefined) || (args.pagingEffect == true)) ? true : false,
     pagingTopBottom = (args.pagingPosition === undefined) || (args.pagingPosition === "bottom") ? 'bottom' : 'top',
-    pagingColor = args.pagingColor || 'white',
-    defaultPadding = parseInt(args.pagingPadding) || 7,
-    pagerPosition = 14 + defaultPadding; // default left position of animated pager control
+    pagingColor     = args.pagingColor || 'white',
+    pagingBackColor = args.pagingBackColor || pagingColor,
+    defaultPadding  = parseInt(args.pagingPadding) || 7,
+    pagerPosition   = 12 + defaultPadding; // default left position of animated pager control
 
 
 (function constructor() {
+    Ti.API.info('Pager back color  = ' + pagingBackColor);
     var views = [];
 
     // get children if Alloy is used, or use `views` key to get pages views
@@ -69,20 +72,9 @@ var lastPage = 0,
 
     // create paging controls or remove pager from its parent container
     if (pagingEffect) {
-        Ti.API.info('adding scrolling pager...');
-
-        for (var i = 0; i < totalPages; ++i) {
-            $.PAGING_VIEW.add(Widget.createController('paging', {
-                index : i,
-                border : pagingColor,
-                padding : (i == 0) ? 0 : defaultPadding
-            }).getView());
-        }
-
+        createPager(totalPages);
         $.pagerControl.left = currentPage * pagerPosition;
-
         $.SCROLLABLE_VIEW.addEventListener('scroll', animateControl);
-
     }
 
     // create backdrop views
@@ -100,6 +92,25 @@ var lastPage = 0,
     }
 
 })();
+
+function createPager(_total) {
+    var totalTempPagers = $.PAGING_VIEW.children.length;
+    totalTempPagers = (totalTempPagers == 0) ? true : false;
+
+    for (var i = 0; i < _total; ++i) {
+        $.PAGING_VIEW.add(Ti.UI.createView({
+            width: 12,
+            height: 12,
+            borderRadius: 6,
+            touchEnabled: false,
+            left : totalTempPagers ? 0 : defaultPadding,
+            borderWidth : (pagerStyle == 1) ? 1.2 : 6.5,
+            borderColor : pagingBackColor
+        }));
+
+        totalTempPagers = false;
+    }
+}
 
 function animateControl(e) {
     if ((totalPages <= 1) || (e.currentPageAsFloat < 0) || (e.currentPageAsFloat > (totalPages - 1))) {
@@ -167,7 +178,6 @@ function addView(_views, _backdropColors, _scrollToView) {
     Ti.API.info('Views = ' + _views.length);
 
     _.each(_views, function(_view, i) {
-        Ti.API.info('API name = ' + _view.apiName);
         if (_view.apiName == 'Ti.UI.View') {
             $.SCROLLABLE_VIEW.addView(_view);
 
@@ -175,11 +185,7 @@ function addView(_views, _backdropColors, _scrollToView) {
 
             if (pagingEffect) {
                 $.scrollView.visible = true;
-
-                $.PAGING_VIEW.add(Widget.createController('paging', {
-                    border : pagingColor,
-                    padding : (totalPages == 1) ? 0 : defaultPadding
-                }).getView());
+                createPager(1);
             }
 
             if (opacityEffect) {
