@@ -9,13 +9,12 @@ var lastPage        = 0,
     pagingEffect    = ((args.pagingEffect === undefined) || (args.pagingEffect == true)) ? true : false,
     pagingTopBottom = (args.pagingPosition === undefined) || (args.pagingPosition === "bottom") ? 'bottom' : 'top',
     pagingColor     = args.pagingColor || 'white',
-    pagingBackColor = args.pagingBackColor || pagingColor,
+    pagingBackColor = (pagerStyle == 1) ? pagingColor : (args.pagingBackColor || '#aaa'),
     defaultPadding  = parseInt(args.pagingPadding) || 7,
     pagerPosition   = 12 + defaultPadding; // default left position of animated pager control
 
 
 (function constructor() {
-    Ti.API.info('Pager back color  = ' + pagingBackColor);
     var views = [];
 
     // get children if Alloy is used, or use `views` key to get pages views
@@ -88,7 +87,10 @@ var lastPage        = 0,
         $.SCROLLABLE_VIEW.addEventListener('scroll', onScrollAnimate);
 
     } else {
-        $.SCROLLABLE_VIEW.addEventListener('scrollend', function (e) { currentPage = e.currentPage; });
+        $.SCROLLABLE_VIEW.addEventListener('scrollend', function (e) {
+            if (e.source.id !== "SCROLLABLE_VIEW") { return; }
+            currentPage = e.currentPage;
+        });
     }
 
 })();
@@ -121,6 +123,8 @@ function animateControl(e) {
 }
 
 function onScrollAnimate(e) {
+    if (e.source.id !== "SCROLLABLE_VIEW") { return; }
+
     if (isRemoving) { return; }
 
     var cFloat = e.currentPageAsFloat;
@@ -131,13 +135,13 @@ function onScrollAnimate(e) {
 
     var delta = cFloat - Math.floor(cFloat);
 
-    // Ti.API.info('Delta = ' + delta + ' : Float = ' + cFloat + ' : Page = ' + e.currentPage);
+    // require('log')('Delta = ' + delta + ' : Float = ' + cFloat + ' : Page = ' + e.currentPage);
 
     if (cFloat > currentPage) {
         // on iOS, scrolling can be jumped slightly to next page when swiped very fastly
         // it gives currentPageAsFloat greater one page ahead and produces blink effect
         // so current float, while moving next, should not be greater than currentPage + 1
-        // READ COMMENTS at bottom most of this file to see the above Ti.API.info output
+        // READ COMMENTS at bottom most of this file to see the above require('log') output
         if (cFloat > (currentPage + 1)) {
             return;
         }
@@ -163,7 +167,6 @@ function onScrollAnimate(e) {
     if (cFloat === e.currentPage) {
         // when the scrolling is finished
         currentPage = e.currentPage;
-        Ti.API.info('Current Page = ' + currentPage);
     }
 }
 
@@ -174,8 +177,6 @@ function addView(_views, _backdropColors, _scrollToView) {
     if (_backdropColors !== undefined) {
         _backdropColors = _.isArray(_backdropColors) ? _backdropColors : [_backdropColors];
     }
-
-    Ti.API.info('Views = ' + _views.length);
 
     _.each(_views, function(_view, i) {
         if (_view.apiName == 'Ti.UI.View') {
