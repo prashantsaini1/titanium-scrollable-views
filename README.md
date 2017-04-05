@@ -1,7 +1,7 @@
 # titanium-scrollable-views
 A cross platform Alloy - Titanium scrollable widget with background color transition effect and animated paging controls.
 
-![Alt Text] (https://github.com/prashantsaini1/titanium-scrollable-views/blob/master/Dec-04-2016%2021-36-53.gif)
+![Alt Text](https://github.com/prashantsaini1/titanium-scrollable-views/blob/master/Dec-04-2016%2021-36-53.gif)
 
 This widget provides you a customizable scrollable view container with background color transition effect (optional) and nice paging controls for iOS & Android.
 
