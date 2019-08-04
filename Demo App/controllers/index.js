@@ -8,5 +8,5 @@ function add() {
 function remove() {
     $.scrollWidget.remove(0);
     $.scrollWidget.remove(0);
-    $.scrollWidget.remove(0);
+    $.scrollWidget.remove(0); 
 }
