@@ -9,5 +9,5 @@
 	"os:mobileweb": {},
 	"dependencies": {
 		"in.prashant.scrollableViews" : "*"
-	}
+	} 
 }
