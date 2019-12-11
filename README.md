@@ -86,4 +86,6 @@ var widget = Alloy.createWidget('in.prashant.scrollableViews', {
 * **scrollableView**: instance of the Ti.UI.ScrollableView used in this widget.
   
 
-THANKS
+## Contributions
+
+If you enjoy this module, feel free to contribute with your PR or [donate](https://paypal.me/prashantsainii) :-)
